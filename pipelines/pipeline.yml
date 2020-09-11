@@ -6,7 +6,6 @@ resource_types:
     tag: latest-final
 
 resources:
-
 - name: pks
   type: pivnet
   source:
@@ -25,7 +24,7 @@ resources:
 jobs:
 - name: create-profiles
   plan:
-  - aggregate:
+  - in_parallel:
     - get: repo
     - get: kubectl
       resource: pks
@@ -39,7 +38,6 @@ jobs:
         - tkgi-linux-amd64-*
 
   - task: create-profiles
-    image: rjain/buildbox
     file: repo/tasks/create-profiles/task.yml
     params:
       OM_TARGET: ((om_target))
