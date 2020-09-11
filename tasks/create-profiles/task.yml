@@ -15,4 +15,4 @@ inputs:
 - name: tkgi
 
 run:
-  path: repository/tasks/create-policies/task.sh
+  path: repository/tasks/create-profiles/task.sh
