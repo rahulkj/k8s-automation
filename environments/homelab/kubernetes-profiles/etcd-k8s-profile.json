@@ -1,0 +1,13 @@
+{
+  "name": "etcd-encrypted-k8s-profile",
+  "description": "k8s profile",
+  "customizations": [
+    {
+      "component": "kube-apiserver",
+      "arguments": {},
+      "file-arguments": {
+        "encryption-provider-config": "encryption-provider-config.yml"
+      }
+    }
+  ]
+}
