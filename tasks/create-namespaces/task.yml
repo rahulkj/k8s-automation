@@ -1,0 +1,18 @@
+---
+platform: linux
+
+params:
+  OM_TARGET:
+  OM_CLIENT_ID:
+  OM_CLIENT_SECRET:
+  OM_SKIP_SSL_VALIDATION:
+  PKS_API_ENDPOINT:
+  ENV:
+
+inputs:
+- name: repository
+- name: kubectl
+- name: tkgi
+
+run:
+  path: repository/tasks/create-namespaces/task.sh

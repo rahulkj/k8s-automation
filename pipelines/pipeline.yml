@@ -1,0 +1,52 @@
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+resources:
+
+- name: pks
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: pivotal-container-service
+    product_version: 1.8.1
+
+- name: repo
+  type: git
+  source:
+    uri: ((git_url))
+    branch: ((git_branch))
+    username: ((git_username))
+    password: ((git_token))
+
+jobs:
+- name: create-profiles
+  plan:
+  - aggregate:
+    - get: repo
+    - get: kubectl
+      resource: pks
+      params:
+        globs:
+        - kubectl-linux-amd64-*
+    - get: tkgi
+      resource: pks
+      params:
+        globs:
+        - tkgi-linux-amd64-*
+
+  - task: create-profiles
+    image: rjain/buildbox
+    file: repo/tasks/create-profiles/task.yml
+    params:
+      OM_TARGET: ((om_target))
+      OM_CLIENT_ID: ((om_client_id))
+      OM_CLIENT_SECRET: ((om_client_secret))
+      OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
+      PKS_API_ENDPOINT: ((pks_api_endpoint))
+      ENV: ((env))
+    input_mapping:
+      repository: repo
