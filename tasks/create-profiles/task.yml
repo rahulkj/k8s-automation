@@ -1,6 +1,10 @@
 ---
 platform: linux
 
+image_resource:
+  type: docker-image
+  source: {repository: rjain/buildbox}
+
 params:
   OM_TARGET:
   OM_CLIENT_ID:
