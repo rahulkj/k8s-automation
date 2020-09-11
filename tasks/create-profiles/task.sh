@@ -3,8 +3,8 @@
 chmod +x tkgi/*
 chmod +x kubectl/*
 
-mv tkgi/* tkgi/tkgi
-mv kubectl/* kubectl/kubectl
+mv tkgi/tkgi* tkgi/tkgi
+mv kubectl/kubectl* kubectl/kubectl
 
 TKGI_CMD=./tkgi/tkgi
 KUBECTL_CMD=./kubectl/kubectl
