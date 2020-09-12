@@ -12,6 +12,7 @@ jobs:
   plan:
   - in_parallel:
     - get: repo
+      trigger: true
   - task: create-profiles
     file: repo/tasks/create-profiles/task.yml
     params:
@@ -29,6 +30,7 @@ jobs:
   - in_parallel:
     - get: repo
       passed: [create-profiles]
+      trigger: true
   - task: create-cluster
     file: repo/tasks/create-cluster/task.yml
     params:
@@ -46,6 +48,7 @@ jobs:
   - in_parallel:
     - get: repo
       passed: [create-cluster]
+      trigger: true
   - task: create-namespaces
     file: repo/tasks/create-namespaces/task.yml
     params:
