@@ -17,6 +17,8 @@ create_cluster() {
   k8s_profile=$(yq r ${cluster_file} cluster.kubernetes-profile)
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
+  echo "Cluster ${cluster}";
+
   CLUSTER_EXISTS=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
 
   if [[ -z ${CLUSTER_EXISTS} ]]; then
@@ -37,7 +39,7 @@ create_cluster() {
 
     ${CMD}
   else
-    echo "Skipping cluster creation"
+    echo "Skipping cluster ${cluster} creation"
   fi
 
   check_status ${cluster}
@@ -59,10 +61,7 @@ login_tkgi
 
 clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
 
-echo "clusters: ${clusters}"
-
-for cluster in ${clusters}; do 
-  echo "Cluster ${cluster}";
+for cluster in ${clusters}; do
   pushd repository/${ENV}/clusters/${cluster}
     create_cluster
   popd
