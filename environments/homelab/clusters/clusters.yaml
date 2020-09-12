@@ -4,3 +4,10 @@ clusters:
 - k8s2
 
 protected_clusters: []
+
+protected_namespaces:
+- default
+- kube-node-lease
+- kube-public
+- kube-system
+- pks-system

@@ -77,3 +77,21 @@ jobs:
       ENV: ((env))
     input_mapping:
       repository: repo
+
+- name: delete-namespaces
+  plan:
+  - in_parallel:
+    - get: repo
+      passed: [create-cluster]
+      trigger: true
+  - task: delete-namespaces
+    file: repo/tasks/delete-namespaces/task.yml
+    params:
+      OM_TARGET: ((om_target))
+      OM_CLIENT_ID: ((om_client_id))
+      OM_CLIENT_SECRET: ((om_client_secret))
+      OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
+      PKS_API_ENDPOINT: ((pks_api_endpoint))
+      ENV: ((env))
+    input_mapping:
+      repository: repo
