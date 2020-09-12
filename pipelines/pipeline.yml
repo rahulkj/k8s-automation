@@ -25,6 +25,23 @@ jobs:
     input_mapping:
       repository: repo
 
+- name: delete-clusters
+  plan:
+  - in_parallel:
+    - get: repo
+      trigger: true
+  - task: delete-clusters
+    file: repo/tasks/delete-cluster/task.yml
+    params:
+      OM_TARGET: ((om_target))
+      OM_CLIENT_ID: ((om_client_id))
+      OM_CLIENT_SECRET: ((om_client_secret))
+      OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
+      PKS_API_ENDPOINT: ((pks_api_endpoint))
+      ENV: ((env))
+    input_mapping:
+      repository: repo
+
 - name: create-cluster
   plan:
   - in_parallel:

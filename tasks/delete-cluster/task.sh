@@ -38,7 +38,7 @@ for cluster in ${existing_clusters}; do
   is_protected=$(is_protected_cluster ${cluster})
   is_removed=$(is_removed_cluster ${cluster})
 
-  if [ "${is_protected}" = false && "${is_removed}" = true ]; then
+  if [[ "${is_protected}" = false && "${is_removed}" = true ]]; then
     echo "tkgi delete-cluster ${cluster} --non-interactive"
   fi
 done
