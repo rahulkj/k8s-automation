@@ -52,7 +52,7 @@ check_status() {
     cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
   done
 
-  echo "Cluster ${1} status is: ${status}"
+  echo "Cluster ${1} status is: ${cluster_status}"
 }
 
 login_tkgi
