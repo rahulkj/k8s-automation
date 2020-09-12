@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 login_cluster() {
   pks_password=$(om -t "${OM_TARGET}" credentials -p pivotal-container-service -c ".properties.uaa_admin_password" -t json | jq -r '.secret')
