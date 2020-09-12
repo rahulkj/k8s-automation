@@ -13,12 +13,14 @@ login_cluster() {
 
   master_ip=$(tkgi cluster ${1} --json | jq -r '.kubernetes_master_ips[0]')
   cluster_hostname=$(tkgi cluster ${1} --json | jq -r '.parameters.kubernetes_master_host')
-  sed "s/$cluster_hostname/$master_ip/g" ~/.kube/config 
+  sed -i "s/$cluster_hostname/$master_ip/g" ~/.kube/config 
 }
 
 create_namespace() {
+  set +e
   CMD="kubectl create -f namespaces.yaml"
   ${CMD}
+  set -e
 }
 
 clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
