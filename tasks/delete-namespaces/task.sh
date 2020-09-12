@@ -44,8 +44,8 @@ delete_namespaces() {
   existing_namespaces=$(kubectl get ns -o json | jq -r '.items[].metadata.name')
 
   for existing_namespace in ${existing_namespaces}; do
-    is_defined=$(is_defined_namespace ${existing_namespace} ${defined_namespaces})
-    is_protect=$(is_protected_namespace ${existing_namespace} ${protected_namespaces})
+    is_defined=$(is_defined_namespace "${existing_namespace}" "${defined_namespaces}")
+    is_protect=$(is_protected_namespace "${existing_namespace}" "${protected_namespaces}")
 
     if [[ "${is_defined}" = false && "${is_protect}" = false ]]; then
       set +e
