@@ -9,13 +9,21 @@ login_tkgi() {
 login_tkgi
 
 pushd repository/${ENV}/kubernetes-profiles
-  for FILE in *.json ; do 
-    tkgi create-kubernetes-profile ${FILE}
+  for file in *.json ; do
+    name=$(cat ${file} | jq -r '.name')
+    profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$name)')
+    if [[ -z ${profile_exists} ]]; then
+      tkgi create-kubernetes-profile ${file}
+    fi
   done
 popd
 
 pushd repository/${ENV}/network-profiles
-  for FILE in *.json ; do 
-    tkgi create-network-profile ${FILE}
+  for file in *.json ; do
+    name=$(cat ${file} | jq -r '.name')
+    profile_exists=$(tkgi network-profiles --json | jq --arg profile ${name} '.[] | select(.name==$name)')
+    if [[ -z ${profile_exists} ]]; then
+      tkgi create-network-profile ${file}
+    fi
   done
 popd
