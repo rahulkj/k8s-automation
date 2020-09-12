@@ -38,7 +38,13 @@ for cluster in ${existing_clusters}; do
   is_protected=$(is_protected_cluster ${cluster})
   is_removed=$(is_removed_cluster ${cluster})
 
-  if [[ "${is_protected}" = false && "${is_removed}" = true ]]; then
-    tkgi delete-cluster ${cluster} --non-interactive
+  if [[ "${is_protected}" = false && "${is_removed}" = true ]]; then  
+    cluster_status=$(tkgi cluster ${cluster} --json | jq -r '.last_action_state')
+    if [[ "${cluster_status}" == "in progress" ]]; do
+      echo "Skipping delete as the cluster is being deleted"
+    else
+      tkgi delete-cluster ${cluster} --non-interactive
+    fi
   fi
+
 done
