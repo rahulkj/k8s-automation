@@ -15,8 +15,6 @@ params:
 
 inputs:
 - name: repository
-- name: kubectl
-- name: tkgi
 
 run:
   path: repository/tasks/create-namespaces/task.sh
