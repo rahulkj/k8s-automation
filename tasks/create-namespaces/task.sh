@@ -17,13 +17,13 @@ function create_namespace() {
   echo "${CMD}"
 }
 
-clusters=$(yq r repository/${ENV}/clusters.yaml -j | jq -r '.clusters[]')
+clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
 
 echo "clusters: ${clusters}"
 
 for cluster in ${clusters}; do 
   echo "Cluster ${cluster}";
-  pushd repository/${ENV}/${cluster}
+  pushd repository/${ENV}/clusters/${cluster}
     login_cluster ${cluster}
     create_namespace
   popd
