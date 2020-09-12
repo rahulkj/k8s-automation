@@ -1,0 +1,20 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: { repository: rjain/buildbox }
+
+params:
+  OM_TARGET:
+  OM_CLIENT_ID:
+  OM_CLIENT_SECRET:
+  OM_SKIP_SSL_VALIDATION:
+  PKS_API_ENDPOINT:
+  ENV:
+
+inputs:
+- name: repository
+
+run:
+  path: repository/tasks/delete-cluster/task.sh
