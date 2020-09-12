@@ -42,17 +42,12 @@ create_cluster() {
   fi
 }
 
-current_status() {
-    status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
-    echo ${status}
-}
-
 check_status() {
-  status=$(current_status ${1})
-  while [ "${status}" != "succeeded" && "${status}" != "failed" ]; do
-    echo "."
+  cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
+  while [[ "${cluster_status}" != "succeeded" && "${cluster_status}" != "failed" ]]; do
+    printf "."
     sleep 30
-    status=$(current_status ${1})
+    cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
   done
 
   echo "Cluster ${1} status is: ${status}"
