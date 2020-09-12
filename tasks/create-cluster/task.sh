@@ -36,10 +36,11 @@ create_cluster() {
     fi
 
     ${CMD}
-    check_status ${cluster}
   else
     echo "Skipping cluster creation"
   fi
+
+  check_status ${cluster}
 }
 
 check_status() {
