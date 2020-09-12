@@ -16,11 +16,26 @@ login_cluster() {
   sed -i "s/$cluster_hostname/$master_ip/g" ~/.kube/config 
 }
 
-create_namespace() {
-  set +e
-  CMD="kubectl create -f namespaces.yaml"
-  ${CMD}
-  set -e
+create_namespaces() {
+
+  namespaces=$(yq r ${1} -j | jq -r '.cluster.namespaces[]')
+
+  for namespace in ${namespaces}; do
+  
+cat > namespace.yaml <<EOF
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${namespace}
+spec: {}
+status: {}
+EOF
+
+    set +e
+    kubectl create -f namespace.yaml
+    set -e
+  done
 }
 
 clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
@@ -31,6 +46,6 @@ for cluster in ${clusters}; do
   echo "Cluster ${cluster}";
   pushd repository/${ENV}/clusters/${cluster}
     login_cluster ${cluster}
-    create_namespace
+    create_namespaces cluster.yaml
   popd
 done
