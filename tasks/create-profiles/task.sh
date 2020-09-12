@@ -11,7 +11,7 @@ login_tkgi
 pushd repository/${ENV}/kubernetes-profiles
   for file in *.json ; do
     name=$(cat ${file} | jq -r '.name')
-    profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$name)')
+    profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
       tkgi create-kubernetes-profile ${file}
     fi
@@ -21,7 +21,7 @@ popd
 pushd repository/${ENV}/network-profiles
   for file in *.json ; do
     name=$(cat ${file} | jq -r '.name')
-    profile_exists=$(tkgi network-profiles --json | jq --arg profile ${name} '.[] | select(.name==$name)')
+    profile_exists=$(tkgi network-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
       tkgi create-network-profile ${file}
     fi
