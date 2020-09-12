@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-function login_tkgi() {
+login_tkgi() {
   pks_password=$(om -t "${OM_TARGET}" credentials -p pivotal-container-service -c ".properties.uaa_admin_password" -t json | jq -r '.secret')
 
   tkgi login -a ${PKS_API_ENDPOINT} -u admin -p ${pks_password} -k
 }
 
-function create_cluster() {
+create_cluster() {
   cluster_file=cluster.yaml
 
   cluster_name=$(yq r ${cluster_file} cluster.name)
@@ -17,21 +17,45 @@ function create_cluster() {
   k8s_profile=$(yq r ${cluster_file} cluster.kubernetes-profile)
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
-  CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
+  CLUSTER_EXISTS=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
 
-  if [[ ! -z "$network_profile" ]]; then
-      CMD="${CMD} --network-profile ${network_profile}"
+  if [[ -z ${CLUSTER_EXISTS} ]]; then
+
+    CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
+
+    if [[ ! -z "$network_profile" ]]; then
+        CMD="${CMD} --network-profile ${network_profile}"
+    fi
+
+    if [[ ! -z "$k8s_profile" ]]; then
+        CMD="${CMD} --kubernetes-profile ${k8s_profile}"
+    fi
+
+      if [[ ! -z "$cluster_tags" ]]; then
+        CMD="${CMD} --tags ${cluster_tags}"
+    fi
+
+    ${CMD}
+    check_status ${cluster}
+  else
+    echo "Skipping cluster creation"
   fi
+}
 
-  if [[ ! -z "$k8s_profile" ]]; then
-      CMD="${CMD} --kubernetes-profile ${k8s_profile}"
-  fi
+current_status() {
+    status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
+    echo ${status}
+}
 
-    if [[ ! -z "$cluster_tags" ]]; then
-      CMD="${CMD} --tags ${cluster_tags}"
-  fi
+check_status() {
+  status=$(current_status ${1})
+  while [ "${status}" != "succeeded" && "${status}" != "failed" ]; do
+    echo "."
+    sleep 30
+    status=$(current_status ${1})
+  done
 
-  echo "${CMD}"
+  echo "Cluster ${1} status is: ${status}"
 }
 
 login_tkgi

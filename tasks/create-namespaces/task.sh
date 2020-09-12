@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function login_cluster() {
+login_cluster() {
   pks_password=$(om -t "${OM_TARGET}" credentials -p pivotal-container-service -c ".properties.uaa_admin_password" -t json | jq -r '.secret')
 
   tkgi login -a ${PKS_API_ENDPOINT} -u admin -p ${pks_password} -k
@@ -12,9 +12,9 @@ function login_cluster() {
   echo ${pks_password} | tkgi get-credentials "${1}"
 }
 
-function create_namespace() {
+create_namespace() {
   CMD="kubectl create -f namespaces.yaml"
-  echo "${CMD}"
+  ${CMD}
 }
 
 clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
