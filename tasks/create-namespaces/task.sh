@@ -10,6 +10,10 @@ login_cluster() {
 
   echo "Authentication to the cluster: ${1}"
   echo ${pks_password} | tkgi get-credentials "${1}"
+
+  master_ip=$(tkgi cluster ${1} --json | jq -r '.kubernetes_master_ips[0]')
+  cluster_hostname=$(tkgi cluster ${1} --json | jq -r '.parameters.kubernetes_master_host')
+  sed "s/$cluster_hostname/$master_ip/g" ~/.kube/config 
 }
 
 create_namespace() {

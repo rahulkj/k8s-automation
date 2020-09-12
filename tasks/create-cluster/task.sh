@@ -44,6 +44,7 @@ create_cluster() {
 }
 
 check_status() {
+  echo "Waiting for cluster ${1} creation to finish"
   cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
   while [[ "${cluster_status}" != "succeeded" && "${cluster_status}" != "failed" ]]; do
     printf "."
