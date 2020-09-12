@@ -14,6 +14,8 @@ pushd repository/${ENV}/kubernetes-profiles
     profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
       tkgi create-kubernetes-profile ${file}
+    else
+      echo "Skipping creating kubernetes profile: ${name}"
     fi
   done
 popd
@@ -24,6 +26,8 @@ pushd repository/${ENV}/network-profiles
     profile_exists=$(tkgi network-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
       tkgi create-network-profile ${file}
+    else
+      echo "Skipping creating network profile: ${name}"
     fi
   done
 popd
