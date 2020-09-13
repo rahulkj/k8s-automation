@@ -15,3 +15,10 @@ om_client_secret: ((precreated_client_secret))
 om_skip_ssl_validation: true
 pks_api_endpoint: api.pks.homelab.io
 env: environments/homelab
+
+credhub:
+  prefix: concourse/homelab
+  ca_cert: ((credhub_server_ca.certificate))
+  client: ((credhub_client))
+  client_secret: ((credhub_client_secret))
+  server: ((credhub_server))

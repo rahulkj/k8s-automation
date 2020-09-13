@@ -22,6 +22,11 @@ jobs:
       OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
       PKS_API_ENDPOINT: ((pks_api_endpoint))
       ENV: ((env))
+      CREDHUB_CLIENT: ((credhub.client))
+      CREDHUB_SECRET: ((credhub.client_secret))
+      CREDHUB_SERVER: ((credhub.server))
+      CREDHUB_CA_CERT: ((credhub.ca_cert))
+      CREDHUB_PREFIX: ((credhub.prefix))
     input_mapping:
       repository: repo
 

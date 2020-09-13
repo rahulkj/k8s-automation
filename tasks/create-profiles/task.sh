@@ -8,9 +8,31 @@ login_tkgi() {
 
 login_tkgi
 
+create_etcd_encryption_file() {
+
+encryption_key=$(head -c 32 /dev/urandom | base64)
+
+credhub set /${CREDHUB_PREFIX}/encryption_key -t value -v ${encryption_key}
+
+cat > encryption-provider-config.yml <<EOF
+---
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+- resources:
+  - secrets
+  providers:
+  - aescbc:
+      keys:
+      - name: key1
+        secret: $encryption_key
+EOF
+}
+
 pushd repository/${ENV}/kubernetes-profiles
   for file in *.json ; do
     name=$(cat ${file} | jq -r '.name')
+    create_etcd_encryption_file
     profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
       tkgi create-kubernetes-profile ${file}
