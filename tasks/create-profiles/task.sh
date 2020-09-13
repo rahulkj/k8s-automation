@@ -12,7 +12,7 @@ create_etcd_encryption_file() {
 
 encryption_key=$(head -c 32 /dev/urandom | base64)
 
-credhub set /${CREDHUB_PREFIX}/encryption_key -t value -v ${encryption_key}
+credhub set -n /${CREDHUB_PREFIX}/encryption_key -t value -v ${encryption_key}
 
 cat > encryption-provider-config.yml <<EOF
 ---
