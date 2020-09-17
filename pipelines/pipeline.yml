@@ -47,7 +47,7 @@ jobs:
     input_mapping:
       repository: repo
 
-- name: create-cluster
+- name: create-clusters
   plan:
   - in_parallel:
     - get: repo
@@ -65,7 +65,7 @@ jobs:
     input_mapping:
       repository: repo
 
-- name: update-cluster
+- name: update-clusters
   plan:
   - in_parallel:
     - get: repo

@@ -30,7 +30,6 @@ update_cluster() {
     if [[ ! -z "$cluster_tags" ]]; then
         CMD="${CMD} --tags ${cluster_tags}"
         is_updated=true
-    else
     fi
 
     if [[ "${is_updated}" = true ]]; then
