@@ -65,6 +65,24 @@ jobs:
     input_mapping:
       repository: repo
 
+- name: update-cluster
+  plan:
+  - in_parallel:
+    - get: repo
+      passed: [create-profiles]
+      trigger: true
+  - task: update-cluster
+    file: repo/tasks/update-cluster/task.yml
+    params:
+      OM_TARGET: ((om_target))
+      OM_CLIENT_ID: ((om_client_id))
+      OM_CLIENT_SECRET: ((om_client_secret))
+      OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
+      PKS_API_ENDPOINT: ((pks_api_endpoint))
+      ENV: ((env))
+    input_mapping:
+      repository: repo
+
 - name: create-namespaces
   plan:
   - in_parallel:
