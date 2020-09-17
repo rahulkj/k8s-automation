@@ -17,4 +17,4 @@ inputs:
 - name: repository
 
 run:
-  path: repository/tasks/update-cluster/task.sh
+  path: repository/tasks/create-update-clusters/task.sh

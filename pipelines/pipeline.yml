@@ -36,7 +36,7 @@ jobs:
     - get: repo
       trigger: true
   - task: delete-clusters
-    file: repo/tasks/delete-cluster/task.yml
+    file: repo/tasks/delete-clusters/task.yml
     params:
       OM_TARGET: ((om_target))
       OM_CLIENT_ID: ((om_client_id))
@@ -47,32 +47,14 @@ jobs:
     input_mapping:
       repository: repo
 
-- name: create-clusters
+- name: create-update-clusters
   plan:
   - in_parallel:
     - get: repo
       passed: [create-profiles]
       trigger: true
-  - task: create-cluster
-    file: repo/tasks/create-cluster/task.yml
-    params:
-      OM_TARGET: ((om_target))
-      OM_CLIENT_ID: ((om_client_id))
-      OM_CLIENT_SECRET: ((om_client_secret))
-      OM_SKIP_SSL_VALIDATION: ((om_skip_ssl_validation))
-      PKS_API_ENDPOINT: ((pks_api_endpoint))
-      ENV: ((env))
-    input_mapping:
-      repository: repo
-
-- name: update-clusters
-  plan:
-  - in_parallel:
-    - get: repo
-      passed: [create-profiles]
-      trigger: true
-  - task: update-cluster
-    file: repo/tasks/update-cluster/task.yml
+  - task: create-clusters
+    file: repo/tasks/create-update-clusters/task.yml
     params:
       OM_TARGET: ((om_target))
       OM_CLIENT_ID: ((om_client_id))
@@ -87,7 +69,7 @@ jobs:
   plan:
   - in_parallel:
     - get: repo
-      passed: [create-cluster]
+      passed: [create-update-clusters]
       trigger: true
   - task: create-namespaces
     file: repo/tasks/create-namespaces/task.yml
