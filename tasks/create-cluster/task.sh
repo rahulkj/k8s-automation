@@ -18,10 +18,9 @@ create_cluster() {
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
   echo "Cluster ${cluster}";
+  CLUSTER=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
 
-  CLUSTER_EXISTS=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
-
-  if [[ -z ${CLUSTER_EXISTS} ]]; then
+  if [[ -z ${CLUSTER} ]]; then
 
     CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
 
@@ -33,20 +32,42 @@ create_cluster() {
         CMD="${CMD} --kubernetes-profile ${k8s_profile}"
     fi
 
-      if [[ ! -z "$cluster_tags" ]]; then
+    if [[ ! -z "$cluster_tags" ]]; then
         CMD="${CMD} --tags ${cluster_tags}"
     fi
 
     ${CMD}
   else
-    echo "Skipping cluster ${cluster} creation"
+    echo "Skipping cluster ${cluster} creation, and checking if cluster needs to be updated..."
+
+    CMD="tkgi update-cluster ${cluster_name}"
+    is_updated=false
+
+    CURRENT_NODES=$(echo "${CLUSTER}" | jq -r '.parameters.kubernetes_worker_instances')
+    if [[ "${CURRENT_NODES}" != "${nodes}" ]]; then
+       CMD="${CMD} --num-nodes ${nodes}"
+       is_updated=true
+    fi
+
+    if [[ ! -z "$cluster_tags" ]]; then
+        CMD="${CMD} --tags ${cluster_tags}"
+        is_updated=true
+    fi
+
+    if [[ "${is_updated}" = true ]]; then
+      echo "Updating cluster ${cluster} ..."
+      ${CMD}
+    else
+      echo "Skipping update cluster ${cluster}, as there is no change in number of nodes, or tags"
+    fi
   fi
 
   check_status ${cluster}
 }
 
 check_status() {
-  echo "Waiting for cluster ${1} creation to finish"
+  echo "Waiting for cluster ${1} creation to finish..."
+
   cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
   while [[ "${cluster_status}" != "succeeded" && "${cluster_status}" != "failed" ]]; do
     printf "."
@@ -54,6 +75,7 @@ check_status() {
     cluster_status=$(tkgi cluster ${1} --json | jq -r '.last_action_state')
   done
 
+  echo ""
   echo "Cluster ${1} status is: ${cluster_status}"
 }
 
