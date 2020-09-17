@@ -40,7 +40,7 @@ create_cluster() {
   else
     echo "Skipping cluster ${cluster} creation, and checking if cluster needs to be updated..."
 
-    CMD="tkgi update-cluster ${cluster_name}"
+    CMD="tkgi update-cluster ${cluster_name} --non-interactive"
     is_updated=false
 
     CURRENT_NODES=$(echo "${CLUSTER}" | jq -r '.parameters.kubernetes_worker_instances')
