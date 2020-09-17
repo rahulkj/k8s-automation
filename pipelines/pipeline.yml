@@ -53,7 +53,7 @@ jobs:
     - get: repo
       passed: [create-profiles]
       trigger: true
-  - task: create-clusters
+  - task: create-update-clusters
     file: repo/tasks/create-update-clusters/task.yml
     params:
       OM_TARGET: ((om_target))
