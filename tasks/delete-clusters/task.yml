@@ -17,4 +17,4 @@ inputs:
 - name: repository
 
 run:
-  path: repository/tasks/delete-cluster/task.sh
+  path: repository/tasks/delete-clusters/task.sh
