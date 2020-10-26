@@ -52,6 +52,8 @@ delete_namespaces() {
       echo "Deleting namespace: ${existing_namespace}"
       kubectl delete ns ${existing_namespace}
       set -e
+    else
+      echo "Skipping delete of Protected/Defined namespace: ${existing_namespace}"
     fi
   done
 }

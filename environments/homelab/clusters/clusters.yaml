@@ -10,3 +10,4 @@ protected_namespaces:
 - kube-public
 - kube-system
 - pks-system
+- nsx-system
