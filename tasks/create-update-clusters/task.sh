@@ -6,6 +6,26 @@ login_tkgi() {
   tkgi login -a ${PKS_API_ENDPOINT} -u admin -p ${pks_password} -k
 }
 
+validateIfTagsExist() {
+  exists=true
+  cluster="${1}"
+  cluster_tags="${2}"
+
+  IFS=',' read -ra TAGS <<< "${cluster_tags}"
+  for tag in "${TAGS[@]}"; do
+    key=$(echo "$tag" | cut -d':' -f1)
+    value=$(echo "$tag" | cut -d':' -f2)
+
+    data=$(echo "${cluster}" | jq -r --arg key $  key} '.parameters.cluster_tags[] | select(.name==$key) | .value')
+    if [[ -z "${data}" || "${value}" != "${data}" ]]; then
+      exists=false
+      break
+    fi
+  done
+
+  echo ${exists}
+}
+
 create_cluster() {
   cluster_file=cluster.yaml
 
@@ -18,9 +38,9 @@ create_cluster() {
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
   echo "Cluster ${cluster}";
-  CLUSTER=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
+  cluster=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
 
-  if [[ -z ${CLUSTER} ]]; then
+  if [[ -z ${cluster} ]]; then
 
     CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
 
@@ -43,15 +63,18 @@ create_cluster() {
     CMD="tkgi update-cluster ${cluster_name} --non-interactive"
     is_updated=false
 
-    CURRENT_NODES=$(echo "${CLUSTER}" | jq -r '.parameters.kubernetes_worker_instances')
+    CURRENT_NODES=$(echo "${cluster}" | jq -r '.parameters.kubernetes_worker_instances')
     if [[ "${CURRENT_NODES}" != "${nodes}" ]]; then
        CMD="${CMD} --num-nodes ${nodes}"
        is_updated=true
     fi
 
-    if [[ ! -z "$cluster_tags" ]]; then
-        CMD="${CMD} --tags ${cluster_tags}"
-        is_updated=true
+    if [[ ! -z "${cluster_tags}" ]]; then
+        allTagsExist=$(validateIfTagsExist "${cluster}" "${cluster_tags}")
+        if [[ "${allTagsExist}" = false ]]; then
+          CMD="${CMD} --tags ${cluster_tags}"
+          is_updated=true
+        fi
     fi
 
     if [[ "${is_updated}" = true ]]; then
