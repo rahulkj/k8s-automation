@@ -57,6 +57,7 @@ create_cluster() {
     fi
 
     ${CMD}
+    check_status ${cluster_name}
   else
     echo "Skipping cluster ${cluster_name} creation, and checking if cluster needs to be updated..."
 
@@ -80,12 +81,11 @@ create_cluster() {
     if [[ "${is_updated}" = true ]]; then
       echo "Updating cluster ${cluster_name} ..."
       ${CMD}
+      check_status ${cluster_name}
     else
       echo "Skipping update cluster ${cluster_name}, as there is no change in number of nodes, or tags"
     fi
   fi
-
-  check_status ${cluster_name}
 }
 
 check_status() {
