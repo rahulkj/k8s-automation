@@ -4,16 +4,16 @@
     "parameters": {
         "lb_size": "small",
         "pod_ip_block_ids": [
-            "25a9b45c-427b-49eb-9287-57a24b75b4b2"
+            "90e2adc9-31bd-4ba0-a4a5-c6c8c6a14e37"
         ],
         "pod_subnet_prefix": 24,
         "pod_routable": false,
         "fip_pool_ids": [
-            "41b82886-8c9f-4887-a342-9d8ea7e6f63f"
+            "903b554d-ef23-413a-819b-3c4b07b714c5"
         ],
-        "t0_router_id": "b9b214f1-60bf-4a1a-b2a1-9a8dbc41ebe4",
+        "t0_router_id": "d4289c60-551b-43cb-af0e-d886aa52abb1",
         "node_ip_block_ids": [
-            "b11be9bf-2dd2-4c76-87d8-da3999448e68"
+            "6cf67ab6-6dcc-44b0-b843-9943b7987e29"
         ],
         "node_routable": false,
         "node_subnet_prefix": 24,
