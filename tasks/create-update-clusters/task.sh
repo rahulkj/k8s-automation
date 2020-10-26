@@ -13,11 +13,11 @@ validateIfTagsExist() {
 
   IFS=',' read -ra TAGS <<< "${cluster_tags}"
   for tag in "${TAGS[@]}"; do
-    key=$(echo "$tag" | cut -d':' -f1)
-    value=$(echo "$tag" | cut -d':' -f2)
+    KEY=$(echo "$tag" | cut -d':' -f1)
+    VALUE=$(echo "$tag" | cut -d':' -f2)
 
-    data=$(echo "${cluster}" | jq -r --arg key $  key} '.parameters.cluster_tags[] | select(.name==$key) | .value')
-    if [[ -z "${data}" || "${value}" != "${data}" ]]; then
+    DATA=$(echo "${cluster}" | jq -r --arg key ${KEY} '.parameters.cluster_tags[] | select(.name==$key) | .value')
+    if [[ -z "${DATA}" || "${VALUE}" != "${DATA}" ]]; then
       exists=false
       break
     fi
@@ -38,9 +38,9 @@ create_cluster() {
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
   echo "Cluster ${cluster}";
-  cluster=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
+  CLUSTER=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
 
-  if [[ -z ${cluster} ]]; then
+  if [[ -z ${CLUSTER} ]]; then
 
     CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
 
@@ -58,19 +58,19 @@ create_cluster() {
 
     ${CMD}
   else
-    echo "Skipping cluster ${cluster} creation, and checking if cluster needs to be updated..."
+    echo "Skipping cluster ${cluster_name} creation, and checking if cluster needs to be updated..."
 
     CMD="tkgi update-cluster ${cluster_name} --non-interactive"
     is_updated=false
 
-    CURRENT_NODES=$(echo "${cluster}" | jq -r '.parameters.kubernetes_worker_instances')
+    CURRENT_NODES=$(echo "${CLUSTER}" | jq -r '.parameters.kubernetes_worker_instances')
     if [[ "${CURRENT_NODES}" != "${nodes}" ]]; then
        CMD="${CMD} --num-nodes ${nodes}"
        is_updated=true
     fi
 
     if [[ ! -z "${cluster_tags}" ]]; then
-        allTagsExist=$(validateIfTagsExist "${cluster}" "${cluster_tags}")
+        allTagsExist=$(validateIfTagsExist "${CLUSTER}" "${cluster_tags}")
         if [[ "${allTagsExist}" = false ]]; then
           CMD="${CMD} --tags ${cluster_tags}"
           is_updated=true
@@ -78,14 +78,14 @@ create_cluster() {
     fi
 
     if [[ "${is_updated}" = true ]]; then
-      echo "Updating cluster ${cluster} ..."
+      echo "Updating cluster ${cluster_name} ..."
       ${CMD}
     else
-      echo "Skipping update cluster ${cluster}, as there is no change in number of nodes, or tags"
+      echo "Skipping update cluster ${cluster_name}, as there is no change in number of nodes, or tags"
     fi
   fi
 
-  check_status ${cluster}
+  check_status ${cluster_name}
 }
 
 check_status() {
