@@ -10,9 +10,16 @@ login_tkgi
 
 create_etcd_encryption_file() {
 
-encryption_key=$(head -c 32 /dev/urandom | base64)
+encryption_key=''
 
-credhub set -n /${CREDHUB_PREFIX}/encryption_key -t value -v ${encryption_key}
+ENCRYPTION_KEY=$(credhub f -n /concourse/homelab1/encryption_key)
+
+if [[ -z "${ENCRYPTION_KEY}" ]]; then
+  encryption_key=$(head -c 32 /dev/urandom | base64)
+  credhub set -n /${CREDHUB_PREFIX}/encryption_key -t value -v ${encryption_key}
+else
+  encryption_key=$(credhub get -n /${CREDHUB_PREFIX}/encryption_key -q)
+fi
 
 cat > encryption-provider-config.yml <<EOF
 ---
@@ -32,9 +39,9 @@ EOF
 pushd repository/${ENV}/kubernetes-profiles
   for file in *.json ; do
     name=$(cat ${file} | jq -r '.name')
-    create_etcd_encryption_file
     profile_exists=$(tkgi kubernetes-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
     if [[ -z ${profile_exists} ]]; then
+      create_etcd_encryption_file
       tkgi create-kubernetes-profile ${file}
     else
       echo "Skipping creating kubernetes profile: ${name}"
