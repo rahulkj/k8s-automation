@@ -33,7 +33,12 @@ status: {}
 EOF
 
     set +e
-    kubectl create -f namespace.yaml
+    NAMESPACE_EXISTS=$(kubectl get ns -o json | jq '.items[] | .metadata.name' | grep ${namespace})
+    if [[ -z "${NAMESPACE_EXISTS}" ]]; then
+      kubectl create -f namespace.yaml
+    else 
+      echo "Namespace: ${namespace} already exists"
+    fi
     set -e
   done
 }
