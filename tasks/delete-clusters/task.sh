@@ -43,7 +43,7 @@ for cluster in ${existing_clusters}; do
     if [[ "${cluster_status}" == "in progress" ]]; then
       echo "Skipping delete as the cluster is being deleted"
     else
-      tkgi delete-cluster ${cluster} --non-interactive
+      tkgi delete-cluster ${cluster} --non-interactive --wait
     fi
   fi
 
