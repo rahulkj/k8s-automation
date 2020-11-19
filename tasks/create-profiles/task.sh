@@ -12,7 +12,9 @@ create_etcd_encryption_file() {
 
 encryption_key=''
 
-ENCRYPTION_KEY=$(credhub f -n /concourse/homelab1/encryption_key)
+set +e
+ENCRYPTION_KEY=$(credhub f -n /${CREDHUB_PREFIX}/encryption_key)
+set -e
 
 if [[ -z "${ENCRYPTION_KEY}" ]]; then
   encryption_key=$(head -c 32 /dev/urandom | base64)
