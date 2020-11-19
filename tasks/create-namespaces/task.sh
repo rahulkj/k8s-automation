@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 login_cluster() {
-  pks_password=$(om -t "${OM_TARGET}" credentials -p pivotal-container-service -c ".properties.uaa_admin_password" -t json | jq -r '.secret')
+  pks_password=$(om -t "${OM_TARGET}" credentials --product-name pivotal-container-service --credential-reference ".properties.uaa_admin_password" -t json | jq -r '.secret')
 
   tkgi login -a ${PKS_API_ENDPOINT} -u admin -p ${pks_password} -k
 
