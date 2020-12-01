@@ -82,6 +82,12 @@ create_cluster() {
       echo "Updating cluster ${cluster_name} ..."
       ${CMD}
       check_status ${cluster_name}
+      
+      echo "--- Cluster Details Begin: ----\n"
+
+      tkgi cluster ${cluster_name}
+
+      echo "--- Cluster Details End: ---- \n\n"
     else
       echo "Skipping update cluster ${cluster_name}, as there is no change in number of nodes, or tags"
     fi
