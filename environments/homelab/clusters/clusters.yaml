@@ -1,6 +1,6 @@
 ---
-clusters:
-- k8s1
+clusters: []
+
 
 protected_clusters: []
 
