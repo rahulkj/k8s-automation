@@ -11,7 +11,5 @@ cluster:
     node-pool:
       - name: medium-disk
         instance: 3
-      - name: large-disk
-        instance: 3
   namespaces:
   - ns1
