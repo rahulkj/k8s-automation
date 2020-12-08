@@ -43,7 +43,7 @@ create_cluster() {
 
   if [[ -z ${CLUSTER} ]]; then
 
-    CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname} -n ${nodes}"
+    CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname}"
 
     if [[ ! -z "$network_profile" ]]; then
         CMD="${CMD} --network-profile ${network_profile}"
@@ -76,6 +76,8 @@ create_cluster() {
         if [[ ! -z "$NODE_POOL_SIZING" ]]; then
           CMD="${CMD} --node-pool-instances ${NODE_POOL_SIZING}"
         fi
+    elif [[ ! -z "${nodes}" ]]; then
+      CMD="${CMD} -n ${nodes}"
     fi
 
     if [[ ! -z "$cluster_tags" ]]; then
