@@ -1,0 +1,33 @@
+{
+  "name": "compute-profile-2",
+  "description": "2 Node Pools (1 node medium.disk, 1 node large.disk), 1 node control-plane",
+  "parameters": {
+    "cluster_customization": {
+      "control_plane": {
+        "cpu": 2,
+        "memory_in_mb": 4096,
+        "ephemeral_disk_in_mb": 32768,
+        "persistent_disk_in_mb": 32768,
+        "instances": 1
+      },
+      "node_pools": [{
+        "cpu": 2,
+        "memory_in_mb": 4096,
+        "ephemeral_disk_in_mb": 32768,
+        "persistent_disk_in_mb": 32768,
+        "name": "medium-disk",
+        "instances": 1,
+        "max_worker_instances": 10
+      },
+      {
+        "cpu": 2,
+        "memory_in_mb": 8096,
+        "ephemeral_disk_in_mb": 65536,
+        "persistent_disk_in_mb": 65536,
+        "name": "large-disk",
+        "instances": 1,
+        "max_worker_instances": 10
+      }]
+    }
+  }
+}

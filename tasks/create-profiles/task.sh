@@ -62,3 +62,15 @@ pushd repository/${ENV}/network-profiles
     fi
   done
 popd
+
+pushd repository/${ENV}/compute-profiles
+  for file in *.json ; do
+    name=$(cat ${file} | jq -r '.name')
+    profile_exists=$(tkgi compute-profiles --json | jq --arg profile ${name} '.[] | select(.name==$profile)')
+    if [[ -z ${profile_exists} ]]; then
+      tkgi create-compute-profile ${file}
+    else
+      echo "Skipping creating compute profile: ${name}"
+    fi
+  done
+popd

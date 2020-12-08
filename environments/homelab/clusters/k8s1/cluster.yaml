@@ -6,6 +6,12 @@ cluster:
   tags: "cluster:k8s1,env:dev"
   network-profile: "default"
   kubernetes-profile: "etcd-encrypted-k8s-profile"
-
+  compute-profile: 
+    name: compute-profile-1
+    node-pool:
+      - name: medium-disk
+        instance: 3
+      - name: large-disk
+        instance: 3
   namespaces:
   - ns1
