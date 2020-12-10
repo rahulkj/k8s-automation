@@ -1,12 +1,16 @@
 cluster:
   name: k8s2
-  nodes: 3
+  nodes: ""
   plan: small
   hostname: k8s2.pks.homelab.io
-  tags: "hello:world,hello1:world1,hello2:world2"
-  network-profile: "dedicated"
+  tags: "cluster:k8s1,env:qa"
+  network-profile: "default"
   kubernetes-profile: ""
-
+  compute-profile: 
+    name: compute-profile-1
+    node-pool:
+      - name: medium-disk
+        instance: 3
   namespaces:
   - ns1
   - ns2

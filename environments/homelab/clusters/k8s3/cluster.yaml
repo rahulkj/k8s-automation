@@ -1,12 +1,14 @@
 cluster:
   name: k8s3
-  nodes: 1
+  nodes: ""
   plan: small
   hostname: k8s3.pks.homelab.io
-  tags: "hello:world,hello1:world1,hello2:world2"
-  network-profile: "dedicated"
-  kubernetes-profile: "etcd-encrypted-k8s-profile"
-
+  tags: "cluster:k8s3,env:prod"
+  network-profile: "default"
+  kubernetes-profile: ""
+  compute-profile: 
+    name: ""
+    node-pool: []
   namespaces:
   - ns1
   - ns2
