@@ -35,7 +35,7 @@ create_cluster() {
   nodes=$(yq r ${cluster_file} cluster.nodes)
   network_profile=$(yq r ${cluster_file} cluster.network-profile)
   k8s_profile=$(yq r ${cluster_file} cluster.kubernetes-profile)
-  compute_profile=$(yq r cluster.yaml --length cluster.compute-profile)
+  compute_profile_name=$(yq r cluster.yaml cluster.compute-profile.name)
   cluster_tags=$(yq r ${cluster_file} cluster.tags)
 
   echo "Cluster ${cluster}";
@@ -46,36 +46,34 @@ create_cluster() {
     CMD="tkgi create-cluster ${cluster_name} -p ${plan_name} -e ${cluster_hostname}"
 
     if [[ ! -z "$network_profile" ]]; then
-        CMD="${CMD} --network-profile ${network_profile}"
+      CMD="${CMD} --network-profile ${network_profile}"
     fi
 
     if [[ ! -z "$k8s_profile" ]]; then
-        CMD="${CMD} --kubernetes-profile ${k8s_profile}"
+      CMD="${CMD} --kubernetes-profile ${k8s_profile}"
     fi
 
-    if [[ 0 -ne "$compute_profile" ]]; then
-        compute_profile_name=$(yq r cluster.yaml cluster.compute-profile.name)
-
-        node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
-        NODE_POOL_SIZING=""
-        i=0
-        while [[ $node_pool_length -ne 0 ]] ; do
-          name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
-          instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
-          if [[ $i -eq 0 ]]; then
-            NODE_POOL_SIZING="$name:$instance"
-          else
-            NODE_POOL_SIZING="$NODE_POOL_SIZING,$name:$instance"
-          fi
-          i=$[$i+1]
-          node_pool_length=$[$node_pool_length-1]
-        done
-
-        CMD="${CMD} --compute-profile ${compute_profile_name}"
-
-        if [[ ! -z "$NODE_POOL_SIZING" ]]; then
-          CMD="${CMD} --node-pool-instances ${NODE_POOL_SIZING}"
+    if [[ ! -z "$compute_profile_name" ]]; then
+      node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
+      NODE_POOL_SIZING=""
+      i=0
+      while [[ $node_pool_length -ne 0 ]] ; do
+        name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
+        instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
+        if [[ $i -eq 0 ]]; then
+          NODE_POOL_SIZING="$name:$instance"
+        else
+          NODE_POOL_SIZING="$NODE_POOL_SIZING,$name:$instance"
         fi
+        i=$[$i+1]
+        node_pool_length=$[$node_pool_length-1]
+      done
+
+      CMD="${CMD} --compute-profile ${compute_profile_name}"
+
+      if [[ ! -z "$NODE_POOL_SIZING" ]]; then
+        CMD="${CMD} --node-pool-instances ${NODE_POOL_SIZING}"
+      fi
     elif [[ ! -z "${nodes}" ]]; then
       CMD="${CMD} -n ${nodes}"
     fi
@@ -99,40 +97,39 @@ create_cluster() {
         CMD="${CMD} --num-nodes ${nodes}"
         is_updated=true
       fi
-    elif [[ 0 -ne "$compute_profile" ]]; then
-        compute_profile_name=$(yq r cluster.yaml cluster.compute-profile.name)
-        COMPUTE_PROFILE=$(echo "${CLUSTER}" | jq -r '.compute_profile_name')
-        if [[ "$COMPUTE_PROFILE" != "$compute_profile_name" ]]; then
-          node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
-          NODE_POOL_SIZING=""
-          i=0
-          while [[ $node_pool_length -ne 0 ]] ; do
-            name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
-            instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
-            if [[ $i -eq 0 ]]; then
-              NODE_POOL_SIZING="$name:$instance"
-            else
-              NODE_POOL_SIZING="$NODE_POOL_SIZING,$name:$instance"
-            fi
-            i=$[$i+1]
-            node_pool_length=$[$node_pool_length-1]
-          done
-
-          CMD="${CMD} --compute-profile ${compute_profile_name}"
-
-          if [[ ! -z "$NODE_POOL_SIZING" ]]; then
-            CMD="${CMD} --node-pool-instances ${NODE_POOL_SIZING}"
+    elif [[ ! -z "$compute_profile_name" ]]; then
+      COMPUTE_PROFILE=$(echo "${CLUSTER}" | jq -r '.compute_profile_name')
+      if [[ "$COMPUTE_PROFILE" != "$compute_profile_name" ]]; then
+        node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
+        NODE_POOL_SIZING=""
+        i=0
+        while [[ $node_pool_length -ne 0 ]] ; do
+          name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
+          instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
+          if [[ $i -eq 0 ]]; then
+            NODE_POOL_SIZING="$name:$instance"
+          else
+            NODE_POOL_SIZING="$NODE_POOL_SIZING,$name:$instance"
           fi
-          is_updated=true
+          i=$[$i+1]
+          node_pool_length=$[$node_pool_length-1]
+        done
+
+        CMD="${CMD} --compute-profile ${compute_profile_name}"
+
+        if [[ ! -z "$NODE_POOL_SIZING" ]]; then
+          CMD="${CMD} --node-pool-instances ${NODE_POOL_SIZING}"
         fi
+        is_updated=true
+      fi
     fi
 
     if [[ ! -z "${cluster_tags}" ]]; then
-        allTagsExist=$(validateIfTagsExist "${CLUSTER}" "${cluster_tags}")
-        if [[ "${allTagsExist}" = false ]]; then
-          CMD="${CMD} --tags ${cluster_tags}"
-          is_updated=true
-        fi
+      allTagsExist=$(validateIfTagsExist "${CLUSTER}" "${cluster_tags}")
+      if [[ "${allTagsExist}" = false ]]; then
+        CMD="${CMD} --tags ${cluster_tags}"
+        is_updated=true
+      fi
     fi
 
     if [[ "${is_updated}" = true ]]; then
