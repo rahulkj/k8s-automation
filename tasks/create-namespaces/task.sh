@@ -18,7 +18,7 @@ login_cluster() {
 
 create_namespaces() {
 
-  namespaces=$(yq r ${1} -j | jq -r '.cluster.namespaces[]')
+  namespaces=$(yq e ${1} -j | jq -r '.cluster.namespaces[]')
 
   for namespace in ${namespaces}; do
   
@@ -43,7 +43,7 @@ EOF
   done
 }
 
-clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
+clusters=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
 
 echo "clusters: ${clusters}"
 

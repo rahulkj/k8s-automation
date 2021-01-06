@@ -29,14 +29,14 @@ validateIfTagsExist() {
 create_cluster() {
   cluster_file=cluster.yaml
 
-  cluster_name=$(yq r ${cluster_file} cluster.name)
-  plan_name=$(yq r ${cluster_file} cluster.plan)
-  cluster_hostname=$(yq r ${cluster_file} cluster.hostname)
-  nodes=$(yq r ${cluster_file} cluster.nodes)
-  network_profile=$(yq r ${cluster_file} cluster.network-profile)
-  k8s_profile=$(yq r ${cluster_file} cluster.kubernetes-profile)
-  compute_profile_name=$(yq r cluster.yaml cluster.compute-profile.name)
-  cluster_tags=$(yq r ${cluster_file} cluster.tags)
+  cluster_name=$(yq e .cluster.name ${cluster_file})
+  plan_name=$(yq e .cluster.plan ${cluster_file})
+  cluster_hostname=$(yq e .cluster.hostname ${cluster_file})
+  nodes=$(yq e .cluster.nodes ${cluster_file})
+  network_profile=$(yq e .cluster.network-profile ${cluster_file})
+  k8s_profile=$(yq e .cluster.kubernetes-profile ${cluster_file})
+  compute_profile_name=$(yq e .cluster.compute-profile.name cluster.yaml)
+  cluster_tags=$(yq e .cluster.tags ${cluster_file})
 
   echo "Cluster ${cluster}";
   CLUSTER=$(tkgi clusters --json | jq --arg cluster_name ${cluster_name} '.[] | select(.name==$cluster_name)')
@@ -54,12 +54,12 @@ create_cluster() {
     fi
 
     if [[ ! -z "$compute_profile_name" ]]; then
-      node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
+      node_pool_length=$(yq eval '.cluster.compute-profile.node-pool | length' cluster.yaml)
       NODE_POOL_SIZING=""
       i=0
       while [[ $node_pool_length -ne 0 ]] ; do
-        name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
-        instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
+        name=$(yq e ".cluster.compute-profile.node-pool[$i].name" cluster.yaml)
+        instance=$(yq e ".cluster.compute-profile.node-pool[$i].instance" cluster.yaml)
         if [[ $i -eq 0 ]]; then
           NODE_POOL_SIZING="$name:$instance"
         else
@@ -100,12 +100,12 @@ create_cluster() {
     elif [[ ! -z "$compute_profile_name" ]]; then
       COMPUTE_PROFILE=$(echo "${CLUSTER}" | jq -r '.compute_profile_name')
       if [[ "$COMPUTE_PROFILE" != "$compute_profile_name" ]]; then
-        node_pool_length=$(yq r cluster.yaml --length cluster.compute-profile.node-pool)
+        node_pool_length=$(yq eval '.cluster.compute-profile.node-pool | length' cluster.yaml)
         NODE_POOL_SIZING=""
         i=0
         while [[ $node_pool_length -ne 0 ]] ; do
-          name=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].name")
-          instance=$(yq r cluster.yaml "cluster.compute-profile.node-pool[$i].instance")
+          name=$(yq e ".cluster.compute-profile.node-pool[$i].name" cluster.yaml)
+          instance=$(yq e ".cluster.compute-profile.node-pool[$i].instance" cluster.yaml)
           if [[ $i -eq 0 ]]; then
             NODE_POOL_SIZING="$name:$instance"
           else
@@ -164,7 +164,7 @@ check_status() {
 
 login_tkgi
 
-clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
+clusters=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
 
 for cluster in ${clusters}; do
   pushd repository/${ENV}/clusters/${cluster}

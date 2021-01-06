@@ -10,8 +10,8 @@ login_tkgi
 
 existing_clusters=$(tkgi clusters --json | jq -r '.[].name')
 
-defined_clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
-protected_clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.protected_clusters[]')
+defined_clusters=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
+protected_clusters=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.protected_clusters[]')
 
 is_protected_cluster() {
   is_protected=false

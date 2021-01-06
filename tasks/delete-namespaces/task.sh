@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-clusters=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
-protected_namespaces=$(yq r repository/${ENV}/clusters/clusters.yaml -j | jq -r '.protected_namespaces[]')
+clusters=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.clusters[]')
+protected_namespaces=$(yq e repository/${ENV}/clusters/clusters.yaml -j | jq -r '.protected_namespaces[]')
 
 login_cluster() {
   pks_password=$(om -t "${OM_TARGET}" credentials --product-name pivotal-container-service --credential-reference ".properties.uaa_admin_password" -t json | jq -r '.secret')
@@ -40,7 +40,7 @@ is_protected_namespace() {
 }
 
 delete_namespaces() {
-  defined_namespaces=$(yq r ${1} -j | jq -r '.cluster.namespaces[]')
+  defined_namespaces=$(yq e ${1} -j | jq -r '.cluster.namespaces[]')
   existing_namespaces=$(kubectl get ns -o json | jq -r '.items[].metadata.name')
 
   for existing_namespace in ${existing_namespaces}; do
