@@ -87,7 +87,7 @@ jobs:
   plan:
   - in_parallel:
     - get: repo
-      passed: [create-update-clusters]
+      passed: [create-namespaces]
       trigger: true
   - task: delete-namespaces
     file: repo/tasks/delete-namespaces/task.yml
