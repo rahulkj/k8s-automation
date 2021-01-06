@@ -1,25 +1,25 @@
 {
-    "name": "dedicated",
-    "description": "Dedicated Network Profile",
-    "parameters": {
-        "lb_size": "small",
-        "pod_ip_block_ids": [
-            "80f64641-e230-4050-a964-b35265443037"
-        ],
-        "pod_subnet_prefix": 24,
-        "pod_routable": false,
-        "fip_pool_ids": [
-            "3a6be102-84d0-49e3-b911-3dab25ad938d"
-        ],
-        "t0_router_id": "dc34d719-7673-4797-bc5f-b3ff4aad7f3a",
-        "node_ip_block_ids": [
-            "aa2b5816-6f30-4b05-a23a-b1b8d2629a5c"
-        ],
-        "node_routable": false,
-        "node_subnet_prefix": 24,
-        "nodes_dns": [
-            "10.0.0.1"
-        ],
-        "single_tier_topology": true
-    }
+  "description": "Dedicated Network Profile",
+  "name": "dedicated",
+  "parameters": {
+    "fip_pool_ids": [
+      "3a6be102-84d0-49e3-b911-3dab25ad938d"
+    ],
+    "lb_size": "small",
+    "node_ip_block_ids": [
+      "aa2b5816-6f30-4b05-a23a-b1b8d2629a5c"
+    ],
+    "node_routable": false,
+    "node_subnet_prefix": 24,
+    "nodes_dns": [
+      "10.0.0.1"
+    ],
+    "pod_ip_block_ids": [
+      "80f64641-e230-4050-a964-b35265443037"
+    ],
+    "pod_routable": false,
+    "pod_subnet_prefix": 24,
+    "single_tier_topology": true,
+    "t0_router_id": "dc34d719-7673-4797-bc5f-b3ff4aad7f3a"
+  }
 }

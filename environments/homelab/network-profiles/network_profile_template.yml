@@ -1,0 +1,18 @@
+name: ((name))
+description: ((description))
+parameters:
+  lb_size: ((lb_size))
+  pod_ip_block_ids:
+    - ((pod_ip_block_ids))
+  pod_subnet_prefix: ((pod_subnet_prefix))
+  pod_routable: ((pod_routable))
+  fip_pool_ids:
+    - ((fip_pool_ids))
+  t0_router_id: ((t0_router_id))
+  node_ip_block_ids:
+    - ((node_ip_block_ids))
+  node_routable: ((node_routable))
+  node_subnet_prefix: ((node_subnet_prefix))
+  nodes_dns:
+    - ((nodes_dns))
+  single_tier_topology: ((single_tier_topology))

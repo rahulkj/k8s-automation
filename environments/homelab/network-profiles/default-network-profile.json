@@ -1,17 +1,11 @@
 {
-  "name": "default",
   "description": "Dafault Network Profile",
+  "name": "default",
   "parameters": {
-    "lb_size": "small",
-    "pod_ip_block_ids": [
-      "fc59a8c9-3658-49d5-be71-542f03f2fc19"
-    ],
-    "pod_subnet_prefix": 24,
-    "pod_routable": false,
     "fip_pool_ids": [
       "236752b7-b1fc-4796-a1dd-2afa5f0c494a"
     ],
-    "t0_router_id": "dc34d719-7673-4797-bc5f-b3ff4aad7f3a",
+    "lb_size": "small",
     "node_ip_block_ids": [
       "cab52253-fcab-4be4-9aab-4be0216498e4"
     ],
@@ -20,6 +14,12 @@
     "nodes_dns": [
       "10.0.0.1"
     ],
-    "single_tier_topology": true
+    "pod_ip_block_ids": [
+      "fc59a8c9-3658-49d5-be71-542f03f2fc19"
+    ],
+    "pod_routable": false,
+    "pod_subnet_prefix": 24,
+    "single_tier_topology": true,
+    "t0_router_id": "dc34d719-7673-4797-bc5f-b3ff4aad7f3a"
   }
 }
