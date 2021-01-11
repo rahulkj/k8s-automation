@@ -3,11 +3,11 @@
   "name": "default",
   "parameters": {
     "fip_pool_ids": [
-      "236752b7-b1fc-4796-a1dd-2afa5f0c494a"
+      "a77816ba-d25a-43b0-8b73-3e2e6dec82de"
     ],
     "lb_size": "small",
     "node_ip_block_ids": [
-      "cab52253-fcab-4be4-9aab-4be0216498e4"
+      "9a640b83-2018-4949-b150-850222f6a287"
     ],
     "node_routable": false,
     "node_subnet_prefix": 24,
@@ -15,11 +15,11 @@
       "10.0.0.1"
     ],
     "pod_ip_block_ids": [
-      "fc59a8c9-3658-49d5-be71-542f03f2fc19"
+      "be7e3a8b-3ca7-4880-8f19-2e69fe2509f5"
     ],
     "pod_routable": false,
     "pod_subnet_prefix": 24,
     "single_tier_topology": true,
-    "t0_router_id": "dc34d719-7673-4797-bc5f-b3ff4aad7f3a"
+    "t0_router_id": "617623e9-dbad-465c-bcfb-116ad40fee62"
   }
 }
