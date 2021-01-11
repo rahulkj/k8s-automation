@@ -84,6 +84,12 @@ create_cluster() {
 
     ${CMD}
     check_status ${cluster_name}
+
+    echo "--- Cluster Details Begin: ----\n"
+
+    tkgi cluster ${cluster_name}
+
+    echo "--- Cluster Details End: ---- \n\n"
   else
     echo "Skipping cluster ${cluster_name} creation, and checking if cluster needs to be updated..."
 
