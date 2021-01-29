@@ -4,7 +4,7 @@ cluster:
   plan: small
   hostname: k8s1.pks.homelab.io
   tags: "cluster:k8s1,env:dev"
-  network-profile: "default"
+  network-profile: ""
   kubernetes-profile: "etcd-encrypted-k8s-profile"
   compute-profile: 
     name: ""
