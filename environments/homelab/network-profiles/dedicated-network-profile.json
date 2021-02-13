@@ -12,7 +12,7 @@
     "node_routable": false,
     "node_subnet_prefix": 24,
     "nodes_dns": [
-      "10.0.0.1"
+      "172.16.0.1"
     ],
     "pod_ip_block_ids": [
       "f08509dc-741a-44e3-941e-a8c0572dba16"
