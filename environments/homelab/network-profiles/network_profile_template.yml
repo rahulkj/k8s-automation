@@ -13,6 +13,5 @@ parameters:
     - ((node_ip_block_ids))
   node_routable: ((node_routable))
   node_subnet_prefix: ((node_subnet_prefix))
-  nodes_dns:
-    - ((nodes_dns))
+  nodes_dns: [((nodes_dns))]
   single_tier_topology: ((single_tier_topology))
