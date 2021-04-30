@@ -13,11 +13,11 @@ om_target: ((opsman_host))
 om_client_id: precreated-client
 om_client_secret: ((precreated_client_secret))
 om_skip_ssl_validation: true
-pks_api_endpoint: api.pks.homelab.io
-env: environments/homelab
+pks_api_endpoint: api.pks.cloudlab.io
+env: environments/cloudlab
 
 credhub:
-  prefix: concourse/homelab
+  prefix: concourse/cloudlab
   ca_cert: ((credhub_server_ca.certificate))
   client: ((credhub_client))
   client_secret: ((credhub_client_secret))
