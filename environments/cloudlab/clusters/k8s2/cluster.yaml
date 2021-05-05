@@ -2,7 +2,7 @@ cluster:
   name: k8s2
   nodes: ""
   plan: small
-  hostname: k8s2.pks.cloudlab.io
+  hostname: k8s2.pks.cloudlab.local
   tags: "cluster:k8s1,env:qa"
   network-profile: "default"
   kubernetes-profile: ""
