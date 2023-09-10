@@ -13,7 +13,7 @@ om_target: ((opsman_host))
 om_client_id: precreated-client
 om_client_secret: ((precreated_client_secret))
 om_skip_ssl_validation: true
-pks_api_endpoint: api.pks.cloudlab.local
+pks_api_endpoint: api.pks.lab.int
 env: environments/cloudlab
 
 credhub:

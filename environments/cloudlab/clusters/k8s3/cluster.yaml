@@ -2,7 +2,7 @@ cluster:
   name: k8s3
   nodes: ""
   plan: small
-  hostname: k8s3.pks.cloudlab.local
+  hostname: k8s3.pks.lab.int
   tags: "cluster:k8s3,env:prod"
   network-profile: "default"
   kubernetes-profile: ""
